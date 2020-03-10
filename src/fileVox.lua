@@ -1,8 +1,4 @@
-
-
-
 local vox = class("fileVOX", {})
-
 
 function vox:init(filepath)
 	self.raw = ""
@@ -70,13 +66,3 @@ function vox:save(path)
 end
 
 return vox
-
-
-
-
-
-
-
-
-
-

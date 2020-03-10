@@ -1,23 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function love.load(arg)
 
     -- Zerobrane debugging
@@ -36,7 +17,6 @@ function love.load(arg)
 	vox = fileVox(apppath .. "/voxels/1975_tank_shoot1.vox")
 	vox:save(apppath .. "/voxels/derp.vox")
 
-
 end
 
 function love.update(dt)
@@ -47,6 +27,3 @@ function love.draw()
 
 
 end
-
-
-

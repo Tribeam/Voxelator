@@ -1,6 +1,3 @@
-
-
-
 local clsVoxel = class("clsVoxel", {})
 
 function clsVoxel:init()
@@ -82,6 +79,5 @@ function clsVoxel:drawPreviews()
 		love.graphics.draw(self.previews[p], self.pos.x((self.size.x+1)*p), self.pos.y)
 	end
 end
-
 
 return clsVoxel
