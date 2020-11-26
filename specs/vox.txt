@@ -1,0 +1,16 @@
+What's the .VOX file format?
+
+Both SLABSPRI & SLAB6 support a simpler, uncompressed voxel format using the .VOX file extension. (See the documentation that comes with those programs.) The .VOX format is simple enough to fit a description of it right here. Here's some C pseudocode:
+
+long xsiz, ysiz, zsiz; //Variable declarations
+char voxel[xsiz][ysiz][zsiz];
+char palette[256][3];
+
+fil = open("?.vox",...);
+read(fil,&xsiz,4); //Dimensions of 3-D array of voxels
+read(fil,&ysiz,4);
+read(fil,&zsiz,4);
+read(fil,voxel,xsiz_ysiz_zsiz); //The 3-D array itself!
+read(fil,palette,768); //VGA palette (values range from 0-63)
+close(fil);
+In the voxel array, use color 255 to define your empty space (air). For interior voxels (ones you can never see), do not use color 255, because it will prevent SLABSPRI from being able to take advantage of back-face culling.

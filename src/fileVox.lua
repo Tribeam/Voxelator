@@ -7,7 +7,14 @@ function vox:init(filepath)
 	self:readHeader()
 	self:readPalette()
 	self:readVoxel()
+	self.voxel:buildPreviews()
 	collectgarbage()
+end
+
+function vox:open(path)
+	local file = assert(io.open(path, "rb"))
+	self.raw = file:read("*all")
+	file:close()
 end
 
 function vox:readHeader()
@@ -20,7 +27,7 @@ function vox:readPalette()
 		local r, g, b = love.data.unpack("<BBB", self.raw, -768+(i-1))
 		p = p + 1
 		local r2, g2, b2 = love.math.colorFromBytes(r, g, b, 255)
-		self.voxel:setPaletteEntry(p, {r2*4, g2*4, b2*4, 255})
+		self.voxel:setPaletteEntry(p, {r2*8, g2*8, b2*8, 1.0})
 	end
 end
 
@@ -33,12 +40,6 @@ function vox:readVoxel()
 			end
 		end
 	end
-end
-
-function vox:open(path)
-	local file = assert(io.open(path, "rb"))
-	self.raw = file:read("*all")
-	file:close()
 end
 
 function vox:save(path)

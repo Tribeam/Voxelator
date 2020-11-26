@@ -76,7 +76,7 @@ end
 
 function clsVoxel:drawPreviews()
 	for p = 1, #self.previews do
-		love.graphics.draw(self.previews[p], self.pos.x((self.size.x+1)*p), self.pos.y)
+		love.graphics.draw(self.previews[p], self.pos.x+((self.size.x+1)*p), self.pos.y)
 	end
 end
 

@@ -24,6 +24,5 @@ function love.update(dt)
 end
 
 function love.draw()
-
-
+	vox.voxel:drawPreviews()
 end
