@@ -13,8 +13,8 @@ function clsVoxel:init()
 	self.size.z = 0
 
 	self.pivot = {}
-	self.pivot.x = 0
-	self.pivot.y = 0
+	self.pivot.x = 50
+	self.pivot.y = 50
 	self.pivot.z = 0
 
 	self.previews = {}
@@ -24,60 +24,75 @@ function clsVoxel:init()
 		self.palette[p] = {0, 0, 0, 0}
 	end
 
-	self.voxel = {{{}}}
+	self.points = {{{}}}
+
+	self.cubescale = 1
+	self.model = MR.model.new_box(self.cubescale)
+
 end
 
-
+-- Set a point in space
 function clsVoxel:setPoint(x, y, z, p)
-	if(self.voxel[x] == nil) then self.voxel[x] = {} end
-	if(self.voxel[x][y] == nil) then self.voxel[x][y] = {} end
+	if(self.points[x] == nil) then self.points[x] = {} end
+	if(self.points[x][y] == nil) then self.points[x][y] = {} end
 
-	self.voxel[x][y][z] = p
+	self.points[x][y][z] = p
 end
 
+-- Get a point in space
 function clsVoxel:getPoint(x, y, z)
-	return self.voxel[x][y][z]
+	return self.points[x][y][z]
 end
 
+-- Set the color of palette entry
 function clsVoxel:setPaletteEntry(p, t)
 	self.palette[p] = t
 end
 
+-- Get the color of a palette entry
 function clsVoxel:getPaletteEntry(p)
 	return self.palette[p]
 end
 
-function clsVoxel:buildPreviews()
+-- Get the color of a palette entry
+function clsVoxel:buildModel()
+	self.model:set_opts({ instance_usage = 'stream' })
+	local instances = {}
+	for x = 1, #self.points do
+		for y = 1, #self.points[x] do
+			for z = 1, #self.points[x][y] do
 
-	self.previews[1] = love.graphics.newCanvas(self.xsize, self.zsize) -- front
-	self.previews[2] = love.graphics.newCanvas(self.xsize, self.zsize) -- back
-	self.previews[3] = love.graphics.newCanvas(self.ysize, self.zsize) -- left
-	self.previews[4] = love.graphics.newCanvas(self.ysize, self.zsize) -- right
-	self.previews[5] = love.graphics.newCanvas(self.xsize, self.ysize) -- top
-	self.previews[6] = love.graphics.newCanvas(self.xsize, self.ysize) -- bottom
-
-	for p = 1, #self.previews do
-		love.graphics.setCanvas(self.previews[p])
-		for x = 1, #self.voxel do
-			for y = 1, #self.voxel[x] do
-				for z = 1, #self.voxel[x][y] do
-					local palentry = self.voxel[x][y][z]+1
-					if(palentry ~= 256) then
-						love.graphics.setColor(self.palette[palentry][1], self.palette[palentry][2], self.palette[palentry][3], self.palette[palentry][4])
-						love.graphics.points(x, z)
-					end
+				local palentry = self.points[x][y][z]+1
+				if(palentry ~= 256) then
+					table.insert(instances, {
+					  x*self.cubescale, -z*self.cubescale, y*self.cubescale, -- positions
+					  0, 0, 0, -- rotations
+					  1, 1, 1, -- scale
+					  self.palette[palentry][1]*4, self.palette[palentry][2]*4, self.palette[palentry][3]*4, 1, -- color
+					  0, 0, -- pbr
+					})
 				end
 			end
 		end
 	end
 
-	love.graphics.setCanvas()
-end
+	self.model:set_raw_instances(instances)
 
-function clsVoxel:drawPreviews()
-	for p = 1, #self.previews do
-		love.graphics.draw(self.previews[p], self.pos.x+((self.size.x+1)*p), self.pos.y)
-	end
 end
 
 return clsVoxel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

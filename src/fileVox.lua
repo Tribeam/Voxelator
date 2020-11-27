@@ -1,5 +1,7 @@
 local vox = class("fileVOX", {})
 
+
+-- Constructor
 function vox:init(filepath)
 	self.raw = ""
 	self.voxel = clsVoxel()
@@ -7,30 +9,33 @@ function vox:init(filepath)
 	self:readHeader()
 	self:readPalette()
 	self:readVoxel()
-	self.voxel:buildPreviews()
 	collectgarbage()
 end
 
+-- Open the file, gather all the data
 function vox:open(path)
 	local file = assert(io.open(path, "rb"))
 	self.raw = file:read("*all")
 	file:close()
 end
 
+-- Gather the header
 function vox:readHeader()
 	self.voxel.size.x, self.voxel.size.y, self.voxel.size.z = love.data.unpack("<LLL", self.raw, 1)
 end
 
+-- Gather the palette
 function vox:readPalette()
 	local p = 0
 	for i = 1, 256*3, 3 do
 		local r, g, b = love.data.unpack("<BBB", self.raw, -768+(i-1))
 		p = p + 1
 		local r2, g2, b2 = love.math.colorFromBytes(r, g, b, 255)
-		self.voxel:setPaletteEntry(p, {r2*8, g2*8, b2*8, 1.0})
+		self.voxel:setPaletteEntry(p, {r2, g2, b2, 1.0})
 	end
 end
 
+-- Gather the Pixel Data
 function vox:readVoxel()
 	for x = 0, self.voxel.size.x-1 do
 		for y = 0, self.voxel.size.y-1 do
@@ -40,8 +45,10 @@ function vox:readVoxel()
 			end
 		end
 	end
+	self.voxel:buildModel()
 end
 
+-- Save the data to file
 function vox:save(path)
 	local file = assert(io.open(path, "wb"))
 
