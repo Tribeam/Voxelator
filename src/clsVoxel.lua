@@ -29,6 +29,7 @@ function clsVoxel:init()
 	self.cubescale = 1
 	self.model = MR.model.new_box(self.cubescale)
 
+
 end
 
 -- Set a point in space
@@ -54,7 +55,7 @@ function clsVoxel:getPaletteEntry(p)
 	return self.palette[p]
 end
 
--- Get the color of a palette entry
+-- build the model
 function clsVoxel:buildModel()
 	self.model:set_opts({ instance_usage = 'stream' })
 	local instances = {}
@@ -65,7 +66,7 @@ function clsVoxel:buildModel()
 				local palentry = self.points[x][y][z]+1
 				if(palentry ~= 256) then
 					table.insert(instances, {
-					  x*self.cubescale, -z*self.cubescale, y*self.cubescale, -- positions
+					  x*self.cubescale, (-z*self.cubescale)+#self.points[x][y], y*self.cubescale, -- positions
 					  0, 0, 0, -- rotations
 					  1, 1, 1, -- scale
 					  self.palette[palentry][1]*4, self.palette[palentry][2]*4, self.palette[palentry][3]*4, 1, -- color
@@ -77,7 +78,20 @@ function clsVoxel:buildModel()
 	end
 
 	self.model:set_raw_instances(instances)
+end
 
+-- draw the palette to screen
+function clsVoxel:drawPalette()
+	for i = 0, 255 do
+		x = (i % 32)*2
+		y = math.floor(i / 32)*2
+		if(self.palette ~= nil) then
+			love.graphics.setColor(self.palette[i+1][1]*4, self.palette[i+1][2]*4, self.palette[i+1][3]*4)
+		end
+		love.graphics.rectangle("fill", (love.graphics.getWidth()-128)+(x*2), (love.graphics.getHeight()-32)+(y*2), 4, 4)
+	end
+	love.graphics.setColor(1.0, 1.0, 1.0)
+	love.graphics.print(love.timer.getFPS(), 10, 10)
 end
 
 return clsVoxel
