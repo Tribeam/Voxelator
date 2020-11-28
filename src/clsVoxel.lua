@@ -13,8 +13,8 @@ function clsVoxel:init()
 	self.size.z = 0
 
 	self.pivot = {}
-	self.pivot.x = 50
-	self.pivot.y = 50
+	self.pivot.x = 0
+	self.pivot.y = 0
 	self.pivot.z = 0
 
 	self.previews = {}
@@ -28,7 +28,6 @@ function clsVoxel:init()
 
 	self.cubescale = 1
 	self.model = MR.model.new_box(self.cubescale)
-
 
 end
 
@@ -80,19 +79,6 @@ function clsVoxel:buildModel()
 	self.model:set_raw_instances(instances)
 end
 
--- draw the palette to screen
-function clsVoxel:drawPalette()
-	for i = 0, 255 do
-		x = (i % 32)*2
-		y = math.floor(i / 32)*2
-		if(self.palette ~= nil) then
-			love.graphics.setColor(self.palette[i+1][1]*4, self.palette[i+1][2]*4, self.palette[i+1][3]*4)
-		end
-		love.graphics.rectangle("fill", (love.graphics.getWidth()-128)+(x*2), (love.graphics.getHeight()-32)+(y*2), 4, 4)
-	end
-	love.graphics.setColor(1.0, 1.0, 1.0)
-	love.graphics.print(love.timer.getFPS(), 10, 10)
-end
 
 return clsVoxel
 

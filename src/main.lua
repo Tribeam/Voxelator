@@ -1,7 +1,7 @@
 
 function love.load()
 
-	love.mouse.setRelativeMode(true)
+	--love.mouse.setRelativeMode(true)
 
 	MR = require 'renderer'
 	Cpml = require 'Cpml'
