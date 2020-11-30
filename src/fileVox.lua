@@ -9,6 +9,7 @@ function vox:init(filepath)
 	self:readHeader()
 	self:readPalette()
 	self:readVoxel()
+	self.voxel:buildModel()
 	collectgarbage()
 end
 
@@ -31,7 +32,7 @@ function vox:readPalette()
 		local r, g, b = love.data.unpack("<BBB", self.raw, -768+(i-1))
 		p = p + 1
 		local r2, g2, b2 = love.math.colorFromBytes(r, g, b, 255)
-		self.voxel:setPaletteEntry(p, {r2, g2, b2, 1.0})
+		self.voxel:setPaletteEntry(p, {r2*4, g2*4, b2*4, 1.0})
 	end
 end
 
@@ -45,7 +46,6 @@ function vox:readVoxel()
 			end
 		end
 	end
-	self.voxel:buildModel()
 end
 
 -- Save the data to file

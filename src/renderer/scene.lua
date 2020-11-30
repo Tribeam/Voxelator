@@ -87,25 +87,9 @@ function M:build()
 
   table.sort(od_models, private.sort_models)
 
-  local lights = { pos = {}, color = {}, linear = {}, quadratic = {} }
-  for i, light in ipairs(self.lights) do
-    if not light.pos then error("light.pos cannot be nil") end
-    if not light.color then error("light.color cannot be nil") end
-    table.insert(lights.pos, light.pos)
-    table.insert(lights.color, light.color)
-    table.insert(lights.linear, light.linear or 0)
-    table.insert(lights.quadratic, light.quadratic or 1)
-  end
-
   return {
     model = models,
     ordered_model = od_models,
-
-    lights = lights,
-
-    sun_dir = self.sun_dir,
-    sun_color = self.sun_color,
-    ambient_color = self.ambient_color,
   }
 end
 

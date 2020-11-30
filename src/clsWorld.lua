@@ -1,24 +1,24 @@
 local clsWorld = class("clsWorld", {})
 
 
-function clsWorld:init()
+function clsWorld:init(voxel)
 
 	self.renderer = MR.renderer.new()
 	self.camera = MR.camera.new()
 	self.scene = MR.scene.new()
-	self.scene.ambient_color = { 1.0, 1.0, 1.0 }
 	self.speed = 100
 	self.gravity = 0.01
 	self.vely = 0
 	self.av = Cpml.vec3(0, 0, 0)
 	self.rv = math.pi
 	self.camera:move_to(0, 0, 0, math.rad(60), 0, 0)
-	self.renderer.render_shadow = false
+	self.projection = "perspective"
+	self.voxel = voxel
+	palshader:send("pal", unpack(self.voxel.palette))
 
 	-- ground
 	self.ground_model = MR.model.new_plane(16, 16)
 	self.ground_model:set_opts({ instance_usage = 'static' })
-
 	local instances = {}
 	local r1 = 0.1
 	local g1 = 0.15
@@ -57,10 +57,8 @@ function clsWorld:init()
 			})
 		end
 	end
-
 	self.ground_model:set_raw_instances(instances)
 
-	self.projection = "perspective"
 end
 
 function clsWorld:update(dt)
@@ -143,10 +141,9 @@ function clsWorld:update(dt)
 			self.av.y = 0
 		end
 	end
-
 end
 
-function clsWorld:draw(model)
+function clsWorld:draw()
 	local w, h = love.graphics.getDimensions()
 	if(self.projection == "perspective") then
 		local hw, hh = w * 0.5, h * 0.5
@@ -155,8 +152,14 @@ function clsWorld:draw(model)
 		local hw, hh = w / 2, h / 2
 		self.camera:orthogonal(-hw, hw, hh, -hh, 1, 3000)
 	end
+
+	-- make camera work
 	self.renderer:apply_camera(self.camera)
-	self.scene:add_model(model)
+
+	-- draw the man of the hour
+	self.scene:add_model(self.voxel.model)
+
+	-- draw ground
 	self.scene:add_model(self.ground_model)
 
 	love.graphics.clear(0.05, 0.1, 0.15)

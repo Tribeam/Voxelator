@@ -6,6 +6,19 @@ function love.load()
 	MR = require 'renderer'
 	Cpml = require 'Cpml'
 
+	palshader = love.graphics.newShader(
+	[[
+		#pragma language glsl3
+
+		extern vec4 pal[256];
+		vec4 effect( vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords )
+		{
+			vec4 pixel = Texel(tex, texture_coords);
+			int index = int(pixel.g*255);
+			return pal[index];
+		}
+	]])
+
 	class			= require("mod30log")
 	clsWorld		= require("clsWorld")
 	clsVoxel		= require("clsVoxel")
@@ -14,12 +27,12 @@ function love.load()
 
 	project = clsProject()
 
+
 	mouse = {}
 	mouse.x = 0
 	mouse.y = 0
 	mouse.dx = 0
 	mouse.dy = 0
-
 
 end
 
