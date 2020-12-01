@@ -43,11 +43,11 @@ vec3 complute_light(
 ) {
   // Cook-Torrance BRDF
   vec3 half_way_dir = normalize(light_dir + view_dir);
-  float NDF = DistributionGGX(normal, half_way_dir, roughness);
-  float G = GeometrySmith(normal, view_dir, light_dir, roughness);
+  float NDF = DistributionGGX(normal, half_way_dir, roughness);   
+  float G = GeometrySmith(normal, view_dir, light_dir, roughness);      
   vec3 F = fresnelSchlick(clamp(dot(half_way_dir, view_dir), 0.0, 1.0), F0);
 
-  vec3 nominator = NDF * G * F;
+  vec3 nominator = NDF * G * F; 
   float denominator = 4 * max(dot(normal, view_dir), 0.0) * max(dot(normal, light_dir), 0.0);
   vec3 specular = nominator / max(denominator, 0.001);
 
@@ -57,13 +57,13 @@ vec3 complute_light(
   // be above 1.0 (unless the surface emits light); to preserve this
   // relationship the diffuse component (kD) should equal 1.0 - kS.
   vec3 kD = vec3(1.0) - kS;
-  // multiply kD by the inverse metalness such that only non-metals
+  // multiply kD by the inverse metalness such that only non-metals 
   // have diffuse lighting, or a linear blend if partly metal (pure metals
   // have no diffuse light).
-  kD *= 1.0 - metallic;
+  kD *= 1.0 - metallic;	  
 
   // scale light by NdotL
-  float NdotL = max(dot(normal, light_dir), 0.0);
+  float NdotL = max(dot(normal, light_dir), 0.0);        
 
   // add to outgoing radiance Lo
   // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again

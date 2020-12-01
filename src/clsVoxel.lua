@@ -80,25 +80,23 @@ function clsVoxel:hollow()
 	end
 end
 
-
 -- build the model
 function clsVoxel:buildModel()
 	self.count = 0
-	self.model:set_opts({ instance_usage = 'static' })
+	self.model:set_opts({ instance_usage = 'dynamic' })
 	local instances = {}
 	for x = 1, #self.points do
 		for y = 1, #self.points[x] do
 			for z = 1, #self.points[x][y] do
 				local p = self.points[x][y][z]
 				if(p ~= 255) then
-
 					self.count = self.count + 1
 					table.insert(instances, {
-					  x*self.cubescale, (-z*self.cubescale)+#self.points[x][y], y*self.cubescale, -- positions
+					  (self.size.x/2)-(x*self.cubescale), ((-z*self.cubescale)+#self.points[x][y]), (self.size.y/2)-(y*self.cubescale), -- positions
 					  0, 0, 0, -- rotations
 					  1, 1, 1, -- scale
 					  0, p/255.0, 0, 1, -- color
-					  0, 0, -- pbr
+					  1, 0, -- ispaletted, unused
 					})
 				end
 			end

@@ -1,0 +1,22 @@
+[11:37:35] <Dark-Assassin> Left click to place voxel, right click to remove voxel, scroll wheel to scroll though each layer, click the palette to select a colour.
+[11:38:25] <Dark-Assassin> For rendering, add a fake contrast.
+[11:39:52] <Dark-Assassin> And make them work in cursor mode too.
+[11:41:08] <Dark-Assassin> Drag a click to draw or remove a flat square along an axis.
+[11:41:53] <Dark-Assassin> Make hollowing visual only and default it on.
+[11:42:25] <Dark-Assassin> Add an export option to bake hollowing.
+[11:43:02] <Dark-Assassin> Add ability to swap palette in both direct swap mode and translation mode.
+[11:43:17] <Dark-Assassin> Add ability to change palette colours directly.
+[11:44:27] <Tribeam_> right so, editing the voxels, thats porbably not gonna happen because idk how to get the cube that you're looking at
+[11:44:39] <Tribeam_> not sure this api even has that
+[11:45:04] <Dark-Assassin> In cursor mode have middle click rotate around the facing or central axis.
+[11:45:31] <Dark-Assassin> You may need fancy math.
+[11:45:37] <Tribeam_> as for palette, i plan on having an export palette feature
+[11:45:42] <Tribeam_> import*
+[11:45:49] <Dark-Assassin> In view mode, the cursor should snap to the centre.
+[11:45:54] <Tribeam_> with near neighbor color picking
+[11:46:07] <Dark-Assassin> Add direct replacement too.
+[11:46:54] <Dark-Assassin> I think in GZDoom, if the voxel doesn't have a palette, the game's one is applied.
+[11:47:31] <Dark-Assassin> So when you get around to editing, add a no palette export option.
+[11:47:53] <Dark-Assassin> Would work well with mods that change the game's palette.
+[11:48:35] <Dark-Assassin> Like BTSX and Ancient Aliens for example.
+[11:49:20] <Dark-Assassin> Also copy out what I write here into a text file in the project's folder so you don't lose track of what I've suggested.

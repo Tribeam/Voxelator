@@ -81,7 +81,7 @@ end
 
 function M:attach(...)
   self.old_canvas = lg.getCanvas()
-  lg.setCanvas({ self.output_canvas })
+  lg.setCanvas({ self.output_canvas, depthstencil = self.depth_map })
   self.camera:attach(...)
 end
 
@@ -93,16 +93,44 @@ end
 
 ----------------------------
 
+function M:render_skybox(model, skybox_tex, skybox_shader)
+  local old_shader = lg.getShader()
+  lg.setShader(skybox_shader)
+
+  -- remove camera move transform
+  local view = self.view:clone()
+  view[13], view[14], view[15], view[16] = 0, 0, 0, 1
+  local pv_mat = Mat4.new()
+  pv_mat:mul(self.projection, view)
+
+  Util.send_uniforms(skybox_shader, {
+    { "projViewMat", 'column', pv_mat },
+    { "skybox", skybox_tex },
+  })
+
+	lg.setDepthMode("lequal", true)
+  lg.draw(model.mesh)
+  lg.setDepthMode()
+
+  lg.setShader(old_shader)
+end
+
 function M:render_model(model, render_shader)
   local model_opts = model.options
 
 	lg.setDepthMode("less", model_opts.write_depth)
 	lg.setMeshCullMode(model_opts.face_culling)
 
+  if model_opts.ext_pass_id and model_opts.ext_pass_id ~= 0 then
+    Util.send_uniform(render_shader, 'extPassId', model_opts.ext_pass_id)
     lg.drawInstanced(model.mesh, model.total_instances)
+    Util.send_uniform(render_shader, 'extPassId', 0)
+  else
+    lg.drawInstanced(model.mesh, model.total_instances)
+  end
 
 	lg.setMeshCullMode('none')
-	lg.setDepthMode()
+  lg.setDepthMode()
 end
 
 return M

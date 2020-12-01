@@ -3,10 +3,13 @@ local clsProject = class("clsProject", {})
 
 function clsProject:init()
 
-	self.voxel = fileVox(love.filesystem.getSourceBaseDirectory() .. "/voxels/perlin.vox").voxel
+
+	self.voxel = fileVox(love.filesystem.getSourceBaseDirectory() .. "/voxels/derp.vox").voxel
 	self.world = clsWorld(self.voxel)
 
 	self.palsize = 8
+
+
 end
 
 function clsProject:update(dt)
@@ -15,17 +18,15 @@ end
 
 
 function clsProject:draw()
-	love.graphics.setShader(palshader)
 	self.world:draw()
-	love.graphics.setShader()
 	self:drawPalette()
 	self:drawInfo()
-
-	if(love.keyboard.isDown("h")) then
-		self.voxel:hollow()
-		self.voxel:buildModel()
-	end
 end
+
+function clsProject:resize()
+	self.world:resize()
+end
+
 
 function clsProject:drawPalette()
 	for i = 0, 255 do
@@ -51,6 +52,7 @@ function clsProject:drawInfo()
 	love.graphics.print(string.format("Pivot: %d, %d, %d", self.voxel.pivot.x, self.voxel.pivot.y, self.voxel.pivot.z), 10, 25)
 	love.graphics.print(string.format("Size:  %d, %d, %d", self.voxel.size.x, self.voxel.size.y, self.voxel.size.z), 10, 40)
 	love.graphics.print(string.format("Voxels:  %d", self.voxel.count), 10, 55)
+	love.graphics.print(string.format("Fly:  %s", self.world.fly), 10, 70)
 end
 
 

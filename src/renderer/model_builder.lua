@@ -121,8 +121,7 @@ function mesh_builder.box(xlen, ylen, zlen, ox, oy, oz)
   if not oy then oy = 0 end
   if not oz then oz = 0 end
 
-  local vs =
-  {
+  local vs = {
     { -hx + ox, -hy + oy, -hz + oz, 0, 0 },
     {  hx + ox, -hy + oy, -hz + oz, 1, 0 },
     {  hx + ox, -hy + oy,  hz + oz, 1, 1 },
@@ -134,8 +133,7 @@ function mesh_builder.box(xlen, ylen, zlen, ox, oy, oz)
     { -hx + ox, hy + oy,  hz + oz, 0, 1 },
   }
 
-  local fs =
-  {
+  local fs = {
     { 1, 2, 3, 4 }, { 8, 7, 6, 5 },
     { 5, 6, 2, 1 }, { 7, 8, 4, 3 },
     { 6, 7, 3, 2 }, { 8, 5, 1, 4 },
@@ -184,7 +182,7 @@ function mesh_builder.sphere(rx, ry, rz, n, ox, oy, oz)
   assert(rx, "Radius cannot be nil")
   if not ry then ry = rx end
   if not rz then rz = rx end
-  if not n then n = 8 end
+  if not n then n = 16 end
   if not ox then ox = 0 end
   if not oy then oy = 0 end
   if not oz then oz = 0 end

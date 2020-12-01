@@ -37,23 +37,85 @@ uniform vec2 cameraClipDist;
 
 uniform Image MainTex;
 
+uniform bool cubeshade;
+
+
+
 // ----------------------------------------------------------------------------
 
 #include_pixel_pass
 
-//#include_glsl calc_shadow.glsl
-//#include_glsl pbr_light.glsl
-//#include_glsl skybox_light.glsl
+#include_glsl calc_shadow.glsl
+#include_glsl pbr_light.glsl
+#include_glsl skybox_light.glsl
 
 // ----------------------------------------------------------------------------
 
-void effect() {
-    vec4 tex_color = Texel(MainTex, VaryingTexCoord.xy) * VaryingColor;
-    if (tex_color.a == 0) { discard; }
+void effect()
+{
+  vec4 tex_color = Texel(MainTex, VaryingTexCoord.xy) * VaryingColor;
+  if (tex_color.a == 0) { discard; }
 
-    vec4 albedo = fragAlbedo;
-    vec3 albedo_rgb = tex_color.rgb * tex_color.a * albedo.rgb;
+  vec3 normal = normalize(modelNormal);
+  float roughness = fragPhysics.x;
+  float metallic = fragPhysics.y;
+  vec4 albedo = fragAlbedo;
+  vec3 pos = fragPos;
 
-    love_Canvases[0] = vec4(albedo_rgb, tex_color.a * albedo.a);
+#ifdef PIXEL_PASS
+  pixel_pass(pos, normal, albedo, roughness, metallic);
+#endif
+
+  vec3 albedo_rgb = tex_color.rgb * tex_color.a * albedo.rgb;
+
+  vec3 view_dir = normalize(cameraPos - pos);
+  vec3 F0 = vec3(0.04);
+  F0 = mix(F0, albedo_rgb, metallic);
+
+  // shadow
+  float shadow = render_shadow ? calc_shadow(lightProjPos + vec3(0, 0, shadow_bias)) : 0;
+
+  vec3 light = vec3(0);
+
+  light += complute_light(
+    normal, normalize(sunDir), view_dir, sunColor,
+    F0, albedo_rgb, roughness, metallic
+  );
+
+  for (int i = 0; i < lightsCount; i++) {
+    vec3 light_dir = normalize(lightsPos[i] - pos);
+    float light_dist = length(lightsPos[i] - pos);
+    float dist = length(lightsPos[i] - pos);
+    float attenuation = 1.0 / (1.0 + lightsLinear[i] * dist + lightsQuadratic[i] * dist * dist);
+    vec3 radiance = lightsColor[i] * attenuation;
+
+    light += complute_light(
+      normal, light_dir, view_dir, radiance,
+      F0, albedo_rgb, roughness, metallic
+    );
+  }
+
+  vec3 ambient;
+  if (useSkybox) {
+    ambient = complute_skybox_ambient_light(normal, view_dir, F0, albedo_rgb, roughness, metallic);
+  } else {
+    ambient = albedo_rgb;
+  }
+  vec3 tcolor;
+  if(cubeshade)
+  {
+    tcolor = ambient + light;
+  }
+  else
+  {
+    tcolor = ambient;
+  }
+
+  // HDR tonemapping
+  //tcolor = tcolor / (tcolor + vec3(1.0));
+  // gamma correct
+  //tcolor = pow(tcolor, vec3(1.0 / gamma));
+
+  love_Canvases[0] = vec4(tcolor, tex_color.a * albedo.a);
 }
 
