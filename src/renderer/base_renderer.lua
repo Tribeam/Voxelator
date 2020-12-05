@@ -81,7 +81,7 @@ end
 
 function M:attach(...)
   self.old_canvas = lg.getCanvas()
-  lg.setCanvas({ self.output_canvas, depthstencil = self.depth_map })
+  lg.setCanvas({ self.output_canvas })
   self.camera:attach(...)
 end
 
@@ -121,13 +121,7 @@ function M:render_model(model, render_shader)
 	lg.setDepthMode("less", model_opts.write_depth)
 	lg.setMeshCullMode(model_opts.face_culling)
 
-  if model_opts.ext_pass_id and model_opts.ext_pass_id ~= 0 then
-    Util.send_uniform(render_shader, 'extPassId', model_opts.ext_pass_id)
-    lg.drawInstanced(model.mesh, model.total_instances)
-    Util.send_uniform(render_shader, 'extPassId', 0)
-  else
-    lg.drawInstanced(model.mesh, model.total_instances)
-  end
+	lg.drawInstanced(model.mesh, model.total_instances)
 
 	lg.setMeshCullMode('none')
   lg.setDepthMode()

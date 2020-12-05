@@ -24,8 +24,8 @@ attribute vec4 ModelPhysics;
 uniform vec4 pal[256];
 uniform bool haspal;
 
-const float gridSize = 25.0;
-const float cellSize = 10.05;
+const float gridSize = 25.;
+const float cellSize = .5;
 
 vec4 position(mat4 transform_projection, vec4 vertex_position) {
   mat4 model_mat = transform_mat(ModelAngle, ModelScale);
@@ -39,29 +39,12 @@ vec4 position(mat4 transform_projection, vec4 vertex_position) {
     {
       int index = int(fragAlbedo.g*255);
       fragAlbedo = pal[index];
-    }
-
-    if(fragPhysics.y == 1)
-    {
-        vec2 coords = VertexTexCoord.xy;
-
-        // Distance-based alpha (1. at the middle, 0. at edges)
-        float alpha = 1. - smoothstep(.15, .50, distance(coords, vec2(.5)));
-
-        // Grid coordinate
-        coords *= gridSize;
-        coords /= cellSize;
-
-        vec2 c = abs(fract(coords - 0.5) - 0.5) / abs(coords.x) + abs(coords.y);
-        float line = clamp(1.0 - min(c.x, c.y), 0.0, 1.0);
-        vec3 value = mix(vec3(0.1, 0.1, 0.11), (vec3(1.04)), line);
-
-        fragAlbedo = vec4(vec3(value), 1);
+      fragAlbedo.a = ModelAlbedo.a;
     }
 
   vec3 normal = mat3(transpose(inverse(model_mat))) * VertexNormal;
   #ifdef VERTEX_PASS
-    vertex_pass(world_pos, normal);
+    //vertex_pass(world_pos, normal);
   #endif
 
   fragPos = world_pos.xyz;

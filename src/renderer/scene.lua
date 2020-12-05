@@ -45,25 +45,27 @@ function M:add_model(model, coord, angle, scale, albedo, physics)
   if not albedo then albedo = default_albedo end
   if not physics then physics = default_physics end
 
-  table.insert(instances_attrs, {
+  instances_attrs[#instances_attrs+1] =
+  {
     coord.x or coord[1], coord.y or coord[2], coord.z or coord[3],
     angle.x or angle[1], angle.y or angle[2], angle.z or angle[3],
     scale.x or scale[1], scale.y or scale[2], scale.z or scale[3],
     albedo.r or albedo[1], albedo.g or albedo[2], albedo.b or albedo[3], albedo.a or albedo[4],
     physics.roughness or physics[1], physics.metallic or physics[2],
-  })
+  }
 end
 
 -- pos: { x,y,z }
 -- color: { r,g,b }
 -- linear: float
 -- quadratic: float
+--[[
 function M:add_light(pos, color, linear, quadratic)
   assert(pos, 'Light pos cannot be nil')
   assert(color, 'light color cannot be nil')
   table.insert(self.lights, { pos = pos, color = color, linear = linear or 0, quadratic = quadratic or 1 })
 end
-
+]]
 -- lights: {
 --  { pos = { x,y, z}, color = { r, g, b}, linear = 0, quadratic = 1 },
 --  light2, light3, ...
@@ -78,15 +80,17 @@ function M:build()
 
   for m, instances_attrs in pairs(self.model) do
     if #instances_attrs > 0 then m:set_raw_instances(instances_attrs) end
-    table.insert(models, m)
+    models[#models+1] = m
   end
+
+
   for m, instances_attrs in pairs(self.ordered_model) do
     if #instances_attrs > 0 then m:set_raw_instances(instances_attrs) end
     table.insert(od_models, m)
   end
 
-  table.sort(od_models, private.sort_models)
-
+  --table.sort(od_models, private.sort_models)
+--[[
   local lights = { pos = {}, color = {}, linear = {}, quadratic = {} }
   for i, light in ipairs(self.lights) do
     if not light.pos then error("light.pos cannot be nil") end
@@ -96,12 +100,10 @@ function M:build()
     table.insert(lights.linear, light.linear or 0)
     table.insert(lights.quadratic, light.quadratic or 1)
   end
-
+]]
   return {
     model = models,
     ordered_model = od_models,
-
-    lights = lights,
 
     sun_dir = self.sun_dir,
     sun_color = self.sun_color,

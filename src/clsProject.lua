@@ -4,7 +4,7 @@ local clsProject = class("clsProject", {})
 function clsProject:init()
 
 
-	self.voxel = fileVox(love.filesystem.getSourceBaseDirectory() .. "/voxels/derp.vox").voxel
+	self.voxel = fileVox(love.filesystem.getSourceBaseDirectory() .. "/voxels/switch.vox").voxel
 	self.world = clsWorld(self.voxel)
 
 	self.palsize = 8
@@ -27,6 +27,9 @@ function clsProject:resize()
 	self.world:resize()
 end
 
+function clsProject:input(text)
+	self.world:input(text)
+end
 
 function clsProject:drawPalette()
 	for i = 0, 255 do
@@ -52,7 +55,11 @@ function clsProject:drawInfo()
 	love.graphics.print(string.format("Pivot: %d, %d, %d", self.voxel.pivot.x, self.voxel.pivot.y, self.voxel.pivot.z), 10, 25)
 	love.graphics.print(string.format("Size:  %d, %d, %d", self.voxel.size.x, self.voxel.size.y, self.voxel.size.z), 10, 40)
 	love.graphics.print(string.format("Voxels:  %d", self.voxel.count), 10, 55)
-	love.graphics.print(string.format("Fly:  %s", self.world.fly), 10, 70)
+	love.graphics.print(string.format("Fly Mode:  %s", self.world.fly), 10, 70)
+	love.graphics.print(string.format("Light: M:%s, R:%.3f, D:%.3f, H:%.3f, B:%.3f", self.world.shade, math.deg(self.world.sunrotation), self.world.sundist, self.world.sunheight, self.world.sunbright), 10, 85)
+	love.graphics.print(string.format("Cursor Mode: %s", self.world.cursormode), 10, 100)
+
+
 end
 
 

@@ -1,8 +1,7 @@
 
 function love.load()
 
-	--love.mouse.setRelativeMode(true)
-
+	love.window.maximize()
 	MR = require 'renderer'
 	Cpml = require 'Cpml'
 
@@ -21,6 +20,7 @@ function love.load()
 	mouse.dx = 0
 	mouse.dy = 0
 
+
 end
 
 function love.resize(x, y)
@@ -37,6 +37,10 @@ function love.update(dt)
 	project:update(dt)
 	mouse.dx = 0
 	mouse.dy = 0
+end
+
+function love.textinput(text)
+	project:input()
 end
 
 function love.draw()

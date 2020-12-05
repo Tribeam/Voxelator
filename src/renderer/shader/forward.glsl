@@ -45,9 +45,9 @@ uniform bool cubeshade;
 
 #include_pixel_pass
 
-#include_glsl calc_shadow.glsl
+//#include_glsl calc_shadow.glsl
 #include_glsl pbr_light.glsl
-#include_glsl skybox_light.glsl
+//#include_glsl skybox_light.glsl
 
 // ----------------------------------------------------------------------------
 
@@ -73,34 +73,40 @@ void effect()
   F0 = mix(F0, albedo_rgb, metallic);
 
   // shadow
-  float shadow = render_shadow ? calc_shadow(lightProjPos + vec3(0, 0, shadow_bias)) : 0;
+  //float shadow = render_shadow ? calc_shadow(lightProjPos + vec3(0, 0, shadow_bias)) : 0;
 
   vec3 light = vec3(0);
+  if(cubeshade)
+  {
+        light += complute_light(
+        normal, normalize(sunDir), view_dir, sunColor,
+        F0, albedo_rgb, roughness, metallic
+      );
 
-  light += complute_light(
-    normal, normalize(sunDir), view_dir, sunColor,
-    F0, albedo_rgb, roughness, metallic
-  );
+      for (int i = 0; i < lightsCount; i++) {
+        vec3 light_dir = normalize(lightsPos[i] - pos);
+        float light_dist = length(lightsPos[i] - pos);
+        float dist = length(lightsPos[i] - pos);
+        float attenuation = 1.0 / (1.0 + lightsLinear[i] * dist + lightsQuadratic[i] * dist * dist);
+        vec3 radiance = lightsColor[i] * attenuation;
 
-  for (int i = 0; i < lightsCount; i++) {
-    vec3 light_dir = normalize(lightsPos[i] - pos);
-    float light_dist = length(lightsPos[i] - pos);
-    float dist = length(lightsPos[i] - pos);
-    float attenuation = 1.0 / (1.0 + lightsLinear[i] * dist + lightsQuadratic[i] * dist * dist);
-    vec3 radiance = lightsColor[i] * attenuation;
-
-    light += complute_light(
-      normal, light_dir, view_dir, radiance,
-      F0, albedo_rgb, roughness, metallic
-    );
-  }
+        light += complute_light(
+          normal, light_dir, view_dir, radiance,
+          F0, albedo_rgb, roughness, metallic
+        );
+      }
+    }
 
   vec3 ambient;
+  /*
   if (useSkybox) {
     ambient = complute_skybox_ambient_light(normal, view_dir, F0, albedo_rgb, roughness, metallic);
-  } else {
+  } else
+  {
+  */
     ambient = albedo_rgb;
-  }
+  //}
+
   vec3 tcolor;
   if(cubeshade)
   {
