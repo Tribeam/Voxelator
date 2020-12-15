@@ -1,0 +1,63 @@
+options =
+{
+	--[[
+		How to use:
+
+		-- set your filename here
+		["filename.png"] =
+		{
+			-- [optional] pivot position
+			-- if these options are numbers, it will set the pivot at the exact position
+			-- if these options are any of the predefined strings, the program will calculate positions for you
+				pivot_x = 0, 					-- or "center", "forward", "back"
+				pivot_y = 0, 					-- or "center", "left", "right"
+				pivot_z = 0, 					-- or "center", "top", "bottom"
+
+			-- [optional] transparent index
+			-- the index within the palette that is the transparent color
+			-- if -1, use png transparency
+				transindex = 255,				-- or any number between 0-255
+
+			-- [optional] rotations
+				angle = 0, 						-- or 90, 180, 270
+				pitch = 0, 						-- or 90, 180, 270
+
+			-- [optional] slice axis
+			-- along which axis the slices are stacked
+				slice_axis = "x", 				-- or "y", "z";
+				slice_axis_dir = "forwards", 	-- or "backwards"
+
+			-- [optional] exports
+				export_obj = "filename" 		-- default is nil
+				export_vox = "filename" 		-- default is the name of the png
+
+			-- [optional] hollow
+			-- hollows out the voxel for better performance
+				hollow = true					-- or false
+
+			-- [optional] palette file
+			-- will search for the given location for an external palette file
+			-- if nil, will use the embedded png palette
+				palette = nil,
+
+			-- [optional] color correction
+			-- recolor to the nearest color in the external palette
+			-- only works if an external palette file is provided
+				colorcorrect = true,
+
+			-- [optional] depth
+			-- if depth is 0, will continue to add slices until the end of the sheet, otherwise, will stop reading for slices after the provided number
+			-- (this will be the depth of your voxel)
+				slice_depth = 0,
+
+			-- [required] slice size
+			-- size of each slice in the sheet(this will also be the width and height of your voxel)
+				slice_width = 64,
+				slice_height = 128,
+		}
+	... continue to add as many pngs and settings as your heart desires
+	]]
+}
+
+
+return options

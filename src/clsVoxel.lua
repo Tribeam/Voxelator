@@ -28,9 +28,6 @@ function clsVoxel:init()
 
 	self.points = {{{}}}
 	self.marked = {}
-	self.cubescale = 1
-	self.model = MR.model.new_box(self.cubescale, self.cubescale)
-	self.instances = {}
 end
 
 -- Set a point in space
@@ -56,6 +53,7 @@ function clsVoxel:getPaletteEntry(p)
 	return self.palette[p]
 end
 
+-- hollow out the voxel to remove unecessary unseen voxels
 function clsVoxel:hollow()
 	for x = 1, #self.points do
 		for y = 1, #self.points[x] do
@@ -78,33 +76,6 @@ function clsVoxel:hollow()
 	for i = 1, #self.marked do
 		self.points[self.marked[i][1]][self.marked[i][2]][self.marked[i][3]] = 255
 	end
-end
-
--- build the model
-function clsVoxel:buildModel()
-	self.count = 0
-	self.model:set_opts({ instance_usage = 'static' })
-	self.instances = {}
-	for x = 1, #self.points do
-		for y = 1, #self.points[x] do
-			for z = 1, #self.points[x][y] do
-				local p = self.points[x][y][z]
-				if(p ~= 255) then
-					self.count = self.count + 1
-					self.instances[#self.instances+1] =
-					{
-					  (self.size.x/2)-(x*self.cubescale), ((-z*self.cubescale)+#self.points[x][y])+0.3, (self.size.y/2)-(y*self.cubescale), -- positions
-					  0, 0, 0, -- rotations
-					  1, 1, 1, -- scale
-					  0, p/255.0, 0, 1, -- color
-					  1, 0, -- ispaletted, unused
-					}
-				end
-			end
-		end
-	end
-
-	self.model:set_raw_instances(self.instances)
 end
 
 return clsVoxel

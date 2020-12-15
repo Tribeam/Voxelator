@@ -9,7 +9,6 @@ function vox:init(filepath)
 	self:readHeader()
 	self:readPalette()
 	self:readVoxel()
-	self.voxel:buildModel()
 	collectgarbage()
 end
 
