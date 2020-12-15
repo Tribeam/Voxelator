@@ -569,14 +569,14 @@ function clsWorld:draw()
 		self.scene:add_model(self.sun_model, self.scene.sun_dir)
 	end
 
-	love.graphics.clear(0.03, 0.07, 0.1)
+	love.graphics.clear(0.01, 0.05, 0.08)
 	self.renderer:render(self.scene:build())
 	self.scene:clean()
 
 end
 
 function clsWorld:input(text)
-	--self.codeseq[#self.codeseq+1] = text
+
 end
 
 return clsWorld

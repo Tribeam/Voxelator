@@ -3,12 +3,10 @@ local clsProject = class("clsProject", {})
 
 function clsProject:init()
 
-
-	self.voxel = fileVox(love.filesystem.getSourceBaseDirectory() .. "/voxels/switch.vox").voxel
+	self.voxel = fileVox(love.filesystem.getSourceBaseDirectory() .. "/voxels/WALL57_2.vox").voxel
 	self.world = clsWorld(self.voxel)
 
 	self.palsize = 8
-
 
 end
 
