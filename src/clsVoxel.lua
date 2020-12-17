@@ -53,7 +53,7 @@ function clsVoxel:getPaletteEntry(p)
 	return self.palette[p]
 end
 
--- hollow out the voxel to remove unecessary unseen voxels
+-- hollow out the voxel to remove unecessary voxels
 function clsVoxel:hollow()
 	for x = 1, #self.points do
 		for y = 1, #self.points[x] do
