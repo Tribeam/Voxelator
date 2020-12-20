@@ -116,7 +116,7 @@ function clsOptions:setup()
 	self.default.pivot_x_off			= self.data.default.pivot_x_off		or 0
 	self.default.pivot_y_off			= self.data.default.pivot_y_off		or 0
 	self.default.pivot_z_off			= self.data.default.pivot_z_off		or 0
-	self.default.transindex 			= self.data.default.transindex 		or -1
+	self.default.transindex 			= self.data.default.transindex 		or 255
 	self.default.angle 					= self.data.default.angle 			or 0
 	self.default.pitch 					= self.data.default.pitch 			or 0
 	self.default.axis 					= self.data.default.axis 			or "x"

@@ -6,13 +6,17 @@ function clsProject:init()
 
 	local count = 1
 	self.voxels = {}
+	self.pngs = {}
 	for k, v in pairs(options.data) do
 		if(string.upper(k) ~= "DEFAULT") then
-			self.voxels[count] = filePng(v).voxel
+			self.pngs[count] = filePng(v)
+			self.voxels[count] = self.pngs[count].voxel
 			count = count + 1
 		end
 	end
 	self.palsize = 8
+
+	self.pngs[1]:save("test.vox")
 
 end
 
@@ -20,6 +24,12 @@ function clsProject:update(dt)
 end
 
 function clsProject:draw()
+
+	love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
+
+	love.graphics.draw(self.pngs[1].sheet.image, 70, 10)
+
+
 	self:drawPalette()
 	--self:drawInfo()
 end
